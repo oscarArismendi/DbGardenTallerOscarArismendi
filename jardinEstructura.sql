@@ -4,6 +4,7 @@ USE gardenDb;
 
 CREATE TABLE gama_producto (
 	id INT(7) AUTO_INCREMENT,
+	nombre VARCHAR(50),
 	descripcion_texto TEXT NULL,
 	descripcion_html TEXT NULL,
 	imagen VARCHAR(256) NULL,
@@ -161,7 +162,7 @@ CREATE TABLE direccion_cliente (
 );
 
 CREATE TABLE producto (
-	id VARCHAR(15),
+	id int(7),
 	nombre VARCHAR(50) NOT NULL,
 	gama_id INT(7),
 	dimensiones VARCHAR(25) NULL,
@@ -202,7 +203,7 @@ CREATE TABLE direccion_proveedor (
 );
 
 CREATE TABLE precio (
-	producto_id VARCHAR(15),
+	producto_id INT(7),
 	precio_venta DECIMAL(15, 2) NOT NULL,
 	proveedor_id INT(7),
 	precio_proveedor DECIMAL(15, 2) NOT NULL,
@@ -228,7 +229,7 @@ CREATE TABLE pedido (
 
 CREATE TABLE detalle_pedido (
 	pedido_id INT(7),
-	producto_id VARCHAR(15),
+	producto_id INT(7),
 	cantidad INT(10) NOT NULL,
 	numero_linea SMALLINT(6) NOT NULL,
 	CONSTRAINT PK_DetallePedido_Id PRIMARY KEY(producto_id, pedido_id),
