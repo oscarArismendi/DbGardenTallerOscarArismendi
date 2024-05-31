@@ -486,8 +486,6 @@ VALUES
 -- insert para productos por medio de un procedure
 DELIMITER //
 
-DELIMITER //
-
 CREATE PROCEDURE generarProductos()
 BEGIN
     DECLARE i INT DEFAULT 1;
@@ -613,45 +611,39 @@ DELIMITER ;
 
 
 -- insert detalle_pedido por medio de procedures
-drop procedure generarDetallePedido;
+
 DELIMITER //
 
 CREATE PROCEDURE generarDetallePedido()
 BEGIN
     DECLARE contador INT DEFAULT 1;
-    DECLARE producto_id INT;
-    DECLARE pedido_id INT;
-    DECLARE cantidad INT;
-    DECLARE numero_linea INT;
-
-    -- Variable para almacenar la cantidad total de pedidos
+    DECLARE producto_id INT DEFAULT 1; -- Start with 1
+    DECLARE pedido_id INT; -- must exist
+    DECLARE cantidad INT; -- 1 to 10
+    DECLARE numero_linea INT; -- not to repeat
+    DECLARE contador2 INT;
+    -- Variable to store the total quantity of orders
     DECLARE total_pedidos INT;
+    DECLARE pedidoCursor INT; -- Correctly declared
 
-    -- Lista para almacenar IDs de pedidos existentes
-    DECLARE pedido_cursor CURSOR FOR SELECT id FROM pedido;
-    DECLARE CONTINUE HANDLER FOR NOT FOUND SET contador = 201;
-
-    -- Contar la cantidad total de pedidos
+    -- Count the total quantity of orders
     SELECT COUNT(*) INTO total_pedidos FROM pedido;
 
-    WHILE contador <= 200 DO
-        -- Seleccionar aleatoriamente un pedido existente
-        SET pedido_id = 0;
-        REPEAT
-            SELECT id INTO pedido_id FROM pedido ORDER BY RAND() LIMIT 1;
-        UNTIL pedido_id > 0 END REPEAT;
-
-        -- Generar otros datos aleatorios para el detalle del pedido
-        SET producto_id = ROUND(RAND() * 275) + 1;
-        SET cantidad = ROUND(RAND() * 10) + 1;
+    WHILE contador <= 60 DO
+        -- Select an existing order randomly
+        SET pedidoCursor = (contador % total_pedidos) + 1;
+        SELECT id INTO pedido_id FROM pedido LIMIT pedidoCursor, 1;
         
-        -- Verificar si el numero_linea ya existe para este pedido
-        SELECT IFNULL(MAX(numero_linea), 0) INTO numero_linea FROM detalle_pedido WHERE pedido_id = pedido_id;
-        SET numero_linea = numero_linea + 1;
-
-        -- Insertar detalle de pedido
-        INSERT INTO detalle_pedido (pedido_id, producto_id, cantidad, numero_linea)
-        VALUES (pedido_id, producto_id, cantidad, numero_linea);
+        SET contador2 = 0;
+        SET numero_linea = (contador % 5) + 1;        
+        WHILE contador2 < 4 DO
+            SET cantidad = ROUND(RAND() * 10) + 1;
+            -- Insert order detail with current producto_id and increment producto_id
+            INSERT INTO detalle_pedido (pedido_id, producto_id, cantidad, numero_linea)
+            VALUES (pedido_id, producto_id, cantidad, numero_linea);
+            SET producto_id = producto_id + 1; -- Increment for the next product
+            SET contador2 = contador2 + 1;
+        END WHILE;
 
         SET contador = contador + 1;
     END WHILE;
@@ -659,12 +651,11 @@ END //
 
 DELIMITER ;
 
-
 CALL generarProductos();
 CALL generarProveedor();
 CALL generarPrecio();
 CALL generarDireccionProveedor();
-CALL generaTelefonosProveedor();
+CALL generarTelefonosProveedor();
 CALL generarDetallePedido();
 
 

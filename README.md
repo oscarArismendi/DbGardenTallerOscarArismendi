@@ -14,6 +14,19 @@
    	direccion_oficina do ON o.id = do.oficina_id
    INNER JOIN
    	ciudad AS c ON c.id = do.ciudad_id;
++------------+----------------------+
+| oficina_id | ciudad               |
++------------+----------------------+
+|          1 | Barcelona            |
+|          2 | Boston               |
+|          3 | Londres              |
+|          4 | Madrid               |
+|          5 | Paris                |
+|          6 | San Francisco        |
+|          7 | Sydney               |
+|          8 | Talavera de la Reina |
+|          9 | Tokyo                |
++------------+----------------------+
    ```
 
    
