@@ -486,6 +486,8 @@ VALUES
 -- insert para productos por medio de un procedure
 DELIMITER //
 
+DELIMITER //
+
 CREATE PROCEDURE generarProductos()
 BEGIN
     DECLARE i INT DEFAULT 1;
@@ -512,32 +514,8 @@ BEGIN
 END //
 
 DELIMITER ;
-
--- insert en precio por medio de procedures
+-- insert proveedor por medio de un procedureDELIMITER //
 DELIMITER //
-
-CREATE PROCEDURE generarPrecio()
-BEGIN
-    DECLARE i INT DEFAULT 1;
-
-    WHILE i <= 275 DO
-        -- Generar precios aleatorios entre 10 y 100
-        DECLARE precio_venta DECIMAL(15, 2);
-        DECLARE precio_proveedor DECIMAL(15, 2);
-        SET precio_venta = ROUND(RAND() * (100 - 10) + 10, 2);
-        SET precio_proveedor = ROUND(RAND() * (100 - 10) + 10, 2);
-
-        -- Insertar el nuevo precio
-        INSERT INTO precio (producto_id, precio_venta, proveedor_id, precio_proveedor)
-        VALUES (i, precio_venta, i, precio_proveedor);
-
-        SET i = i + 1;
-    END WHILE;
-END //
-
-DELIMITER ;
-
--- insert proveedor por medio de un procedure
 
 CREATE PROCEDURE generarProveedor()
 BEGIN
@@ -550,11 +528,36 @@ BEGIN
 
         -- Insertar el nuevo proveedor
         INSERT INTO proveedor (nombre) VALUES (nombre_proveedor);
+
         SET i = i + 1;
     END WHILE;
 END //
 
 DELIMITER ;
+
+
+-- insert en precio por medio de procedures
+DELIMITER //
+
+CREATE PROCEDURE generarPrecio()
+BEGIN
+    DECLARE i INT DEFAULT 1;
+    DECLARE precio_venta DECIMAL(15, 2);
+    DECLARE precio_proveedor DECIMAL(15, 2);
+
+    WHILE i <= 275 DO
+        SET precio_venta = ROUND(RAND() * (150 - 1) + 1, 2);
+        SET precio_proveedor = ROUND(RAND() * (150 - 1) + 1, 2);
+
+        INSERT INTO precio (producto_id, precio_venta, proveedor_id, precio_proveedor)
+        VALUES (i, precio_venta, i, precio_proveedor);
+
+        SET i = i + 1;
+    END WHILE;
+END //
+
+DELIMITER ;
+
 
 -- insercion direccion proveedor por medio de procedures
 DELIMITER //
@@ -582,53 +585,74 @@ BEGIN
 
         SET i = i + 1;
     END WHILE;
-END //9
+END //
+DELIMITER ;
 
+-- insert telefono_provedor por medio de proceduresDELIMITER //
 
--- insert telefono_provedor por medio de procedures
 DELIMITER //
 
-CREATE PROCEDURE generarTelefonos()
+CREATE PROCEDURE generarTelefonosProveedor()
 BEGIN
     DECLARE contador INT DEFAULT 1;
-    
+    DECLARE tipo_telefono INT;
+    DECLARE telefono VARCHAR(50);
+
     WHILE contador <= 275 DO
-        DECLARE tipo_telefono INT;
-        DECLARE telefono VARCHAR(50);
-        
-        SET tipo_telefono = RAND() * 3 + 1;
+        SET tipo_telefono = FLOOR(RAND() * 3) + 1;
         SET telefono = LPAD(FLOOR(RAND() * 999999999999999), 15, '0');
-        
+
         INSERT INTO telefono_proveedor (proveedor_id, tipo_id, numero)
         VALUES (contador, tipo_telefono, telefono);
-        
+
         SET contador = contador + 1;
     END WHILE;
 END //
 
 DELIMITER ;
 
+
 -- insert detalle_pedido por medio de procedures
+drop procedure generarDetallePedido;
 DELIMITER //
 
 CREATE PROCEDURE generarDetallePedido()
 BEGIN
     DECLARE contador INT DEFAULT 1;
-    
+    DECLARE producto_id INT;
+    DECLARE pedido_id INT;
+    DECLARE cantidad INT;
+    DECLARE numero_linea INT;
+
+    -- Variable para almacenar la cantidad total de pedidos
+    DECLARE total_pedidos INT;
+
+    -- Lista para almacenar IDs de pedidos existentes
+    DECLARE pedido_cursor CURSOR FOR SELECT id FROM pedido;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET contador = 201;
+
+    -- Contar la cantidad total de pedidos
+    SELECT COUNT(*) INTO total_pedidos FROM pedido;
+
     WHILE contador <= 200 DO
-        DECLARE producto_id INT;
-        DECLARE pedido_id INT;
-        DECLARE cantidad INT;
-        DECLARE numero_linea INT;
+        -- Seleccionar aleatoriamente un pedido existente
+        SET pedido_id = 0;
+        REPEAT
+            SELECT id INTO pedido_id FROM pedido ORDER BY RAND() LIMIT 1;
+        UNTIL pedido_id > 0 END REPEAT;
+
+        -- Generar otros datos aleatorios para el detalle del pedido
+        SET producto_id = ROUND(RAND() * 275) + 1;
+        SET cantidad = ROUND(RAND() * 10) + 1;
         
-        SET producto_id = FLOOR(RAND() * 275) + 1;
-        SET pedido_id = CASE WHEN RAND() < 0.5 THEN FLOOR(RAND() * 83) + 1 ELSE FLOOR(RAND() * (128 - 89 + 1)) + 89 END;
-        SET cantidad = FLOOR(RAND() * 10) + 1;
-        SET numero_linea = contador;
-        
+        -- Verificar si el numero_linea ya existe para este pedido
+        SELECT IFNULL(MAX(numero_linea), 0) INTO numero_linea FROM detalle_pedido WHERE pedido_id = pedido_id;
+        SET numero_linea = numero_linea + 1;
+
+        -- Insertar detalle de pedido
         INSERT INTO detalle_pedido (pedido_id, producto_id, cantidad, numero_linea)
-        VALUES (pedido_id, CONCAT('producto', producto_id), cantidad, numero_linea);
-        
+        VALUES (pedido_id, producto_id, cantidad, numero_linea);
+
         SET contador = contador + 1;
     END WHILE;
 END //
@@ -636,9 +660,12 @@ END //
 DELIMITER ;
 
 
-CALL generarDetallePedido();
-CALL generaTelefonos();
-CALL generarDireccionProveedor();
+CALL generarProductos();
 CALL generarProveedor();
 CALL generarPrecio();
-CALL generarProductos();
+CALL generarDireccionProveedor();
+CALL generaTelefonosProveedor();
+CALL generarDetallePedido();
+
+
+
