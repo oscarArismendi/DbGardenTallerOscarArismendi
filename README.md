@@ -6,32 +6,34 @@
 
    ```mysql
    SELECT DISTINCT
-   	o.id AS oficina_id,
-   	c.nombre AS ciudad
+    o.id AS oficina_id,
+    c.nombre AS ciudad
    FROM
-   	oficina AS o
+    oficina AS o
    INNER JOIN
-   	direccion_oficina do ON o.id = do.oficina_id
+    direccion_oficina do ON o.id = do.oficina_id
    INNER JOIN
-   	ciudad AS c ON c.id = do.ciudad_id;
-+------------+----------------------+
-| oficina_id | ciudad               |
-+------------+----------------------+
-|          1 | Barcelona            |
-|          2 | Boston               |
-|          3 | Londres              |
-|          4 | Madrid               |
-|          5 | Paris                |
-|          6 | San Francisco        |
-|          7 | Sydney               |
-|          8 | Talavera de la Reina |
-|          9 | Tokyo                |
-+------------+----------------------+
+    ciudad AS c ON c.id = do.ciudad_id;
+   +------------+----------------------+
+   | oficina_id | ciudad               |
+   +------------+----------------------+
+   |          1 | Barcelona            |
+   |          2 | Boston               |
+   |          3 | Londres              |
+   |          4 | Madrid               |
+   |          5 | Paris                |
+   |          6 | San Francisco        |
+   |          7 | Sydney               |
+   |          8 | Talavera de la Reina |
+   |          9 | Tokyo                |
+   +------------+----------------------+
    ```
 
    
 
 2. Devuelve un listado con la ciudad y el teléfono de las oficinas de España.
+
+   
 
 3. Devuelve un listado con el nombre, apellidos y email de los empleados cuyo
    jefe tiene un código de jefe igual a 7.
@@ -94,192 +96,281 @@
 17. Obtén un listado con el nombre de cada cliente y el nombre y apellido de su
     representante de ventas.
 
+    ```mysql
+    SELECT
+    	c.nombre AS nombre_cliente,
+    	e.nombre AS nombre_empleado,
+    	e.apellido1 AS apellido1_empleado,
+    	e.apellido2 AS apellido2_empleado
+    FROM
+    	cliente c
+    INNER JOIN
+    	empleado e ON c.empleado_id = e.id WHERE e.puesto_id = 5;
+    +--------------------------------+-----------------+--------------------+--------------------+
+    | nombre_cliente                 | nombre_empleado | apellido1_empleado | apellido2_empleado |
+    +--------------------------------+-----------------+--------------------+--------------------+
+    | Flores Marivi                  | Felipe          | Rosas              | Marquez            |
+    | Flowers, S.A                   | Felipe          | Rosas              | Marquez            |
+    | Fuenla City                    | Felipe          | Rosas              | Marquez            |
+    | Top Campo                      | Felipe          | Rosas              | Marquez            |
+    | Jardineria Sara                | Felipe          | Rosas              | Marquez            |
+    | Lasas S.A.                     | Mariano         | López              | Murcia             |
+    | Lasas S.A.                     | Mariano         | López              | Murcia             |
+    | Camunas Jardines S.L.          | Mariano         | López              | Murcia             |
+    | Dardena S.A.                   | Mariano         | López              | Murcia             |
+    | Jardines y Mansiones Cactus SL | Lucio           | Campoamor          | Martín             |
+    | Jardinerías Matías SL          | Lucio           | Campoamor          | Martín             |
+    | Golf S.A.                      | José Manuel     | Martinez           | De la Osa          |
+    | Americh Golf Management SL     | José Manuel     | Martinez           | De la Osa          |
+    | Aloha                          | José Manuel     | Martinez           | De la Osa          |
+    | El Prat                        | José Manuel     | Martinez           | De la Osa          |
+    | Sotogrande                     | José Manuel     | Martinez           | De la Osa          |
+    | france telecom                 | Lionel          | Narvaez            |                    |
+    | Musée du Louvre                | Lionel          | Narvaez            |                    |
+    | GoldFish Garden                | Walter Santiago | Sanchez            | Lopez              |
+    | Gardening Competitor           | Walter Santiago | Sanchez            | Lopez              |
+    | Gardening Associates           | Walter Santiago | Sanchez            | Lopez              |
+    | Gerudo Valley                  | Lorena          | Paxton             |                    |
+    | Tendo Garden                   | Lorena          | Paxton             |                    |
+    | Jardin de Flores               | Julian          | Bellinelli         |                    |
+    | Naturajardin                   | Julian          | Bellinelli         |                    |
+    | Vivero Humanes                 | Julian          | Bellinelli         |                    |
+    | Agrojardin                     | Julian          | Bellinelli         |                    |
+    | Campohermoso                   | Julian          | Bellinelli         |                    |
+    | Tutifruti S.A                  | Mariko          | Kishi              |                    |
+    | El Jardin Viviente S.L         | Mariko          | Kishi              |                    |
+    +--------------------------------+-----------------+--------------------+--------------------+
+    
+    ```
+
+    
+
 18. Muestra el nombre de los clientes que hayan realizado pagos junto con el
     nombre de sus representantes de ventas.
 
-19. Muestra el nombre de los clientes que no hayan realizado pagos junto con
-    el nombre de sus representantes de ventas.
+```mysql
+SELECT cliente.nombre, empleado.nombre AS nombreEmpleado, empleado.apellido1 AS primerApellidoEmpleado, empleado.apellido2 AS segundoApellidoEmpleado 
+FROM cliente 
+INNER JOIN empleado ON cliente.empleado_id = empleado.id
+INNER JOIN pago ON cliente.id = pago.cliente_id;
++--------------------------------+-----------------+------------------------+-------------------------+
+| nombre                         | nombreEmpleado  | primerApellidoEmpleado | segundoApellidoEmpleado |
++--------------------------------+-----------------+------------------------+-------------------------+
+| GoldFish Garden                | Walter Santiago | Sanchez                | Lopez                   |
+| GoldFish Garden                | Walter Santiago | Sanchez                | Lopez                   |
+| Gardening Associates           | Walter Santiago | Sanchez                | Lopez                   |
+| Gardening Associates           | Walter Santiago | Sanchez                | Lopez                   |
+| Gardening Associates           | Walter Santiago | Sanchez                | Lopez                   |
+| Gerudo Valley                  | Lorena          | Paxton                 |                         |
+| Gerudo Valley                  | Lorena          | Paxton                 |                         |
+| Gerudo Valley                  | Lorena          | Paxton                 |                         |
+| Gerudo Valley                  | Lorena          | Paxton                 |                         |
+| Gerudo Valley                  | Lorena          | Paxton                 |                         |
+| Tendo Garden                   | Lorena          | Paxton                 |                         |
+| Beragua                        | Emmanuel        | Magaña                 | Perez                   |
+| Naturagua                      | Emmanuel        | Magaña                 | Perez                   |
+| Camunas Jardines S.L.          | Mariano         | López                  | Murcia                  |
+| Dardena S.A.                   | Mariano         | López                  | Murcia                  |
+| Jardin de Flores               | Julian          | Bellinelli             |                         |
+| Jardin de Flores               | Julian          | Bellinelli             |                         |
+| Flores Marivi                  | Felipe          | Rosas                  | Marquez                 |
+| Golf S.A.                      | José Manuel     | Martinez               | De la Osa               |
+| Sotogrande                     | José Manuel     | Martinez               | De la Osa               |
+| Jardines y Mansiones Cactus SL | Lucio           | Campoamor              | Martín                  |
+| Jardinerías Matías SL          | Lucio           | Campoamor              | Martín                  |
+| Agrojardin                     | Julian          | Bellinelli             |                         |
+| Jardineria Sara                | Felipe          | Rosas                  | Marquez                 |
+| Tutifruti S.A                  | Mariko          | Kishi                  |                         |
+| El Jardin Viviente S.L         | Mariko          | Kishi                  |                         |
++--------------------------------+-----------------+------------------------+-------------------------+
 
-20. Devuelve el nombre de los clientes que han hecho pagos y el nombre de sus
-    representantes junto con la ciudad de la oficina a la que pertenece el
-    representante.
+```
 
-21. Devuelve el nombre de los clientes que no hayan hecho pagos y el nombre
-    de sus representantes junto con la ciudad de la oficina a la que pertenece el
-    representante.
 
-22. Lista la dirección de las oficinas que tengan clientes en Fuenlabrada.
 
-23. Devuelve el nombre de los clientes y el nombre de sus representantes junto
-    con la ciudad de la oficina a la que pertenece el representante.
+1. Muestra el nombre de los clientes que no hayan realizado pagos junto con
+   el nombre de sus representantes de ventas.
 
-24. Devuelve un listado con el nombre de los empleados junto con el nombre
-    de sus jefes.
+2. Devuelve el nombre de los clientes que han hecho pagos y el nombre de sus
+   representantes junto con la ciudad de la oficina a la que pertenece el
+   representante.
 
-25. Devuelve un listado que muestre el nombre de cada empleados, el nombre
-    de su jefe y el nombre del jefe de sus jefe.
+3. Devuelve el nombre de los clientes que no hayan hecho pagos y el nombre
+   de sus representantes junto con la ciudad de la oficina a la que pertenece el
+   representante.
 
-26. Devuelve el nombre de los clientes a los que no se les ha entregado a
-    tiempo un pedido.
+4. Lista la dirección de las oficinas que tengan clientes en Fuenlabrada.
 
-27. Devuelve un listado de las diferentes gamas de producto que ha comprado
-    cada cliente.
+5. Devuelve el nombre de los clientes y el nombre de sus representantes junto
+   con la ciudad de la oficina a la que pertenece el representante.
 
-    ## Consultas multitabla (Composición externa)
+6. Devuelve un listado con el nombre de los empleados junto con el nombre
+   de sus jefes.
 
-    **Resuelva todas las consultas utilizando las cláusulas LEFT JOIN, RIGHT JOIN, NATURAL**
-    **LEFT JOIN y NATURAL RIGHT JOIN.**
+7. Devuelve un listado que muestre el nombre de cada empleados, el nombre
+   de su jefe y el nombre del jefe de sus jefe.
 
-28. Devuelve un listado que muestre solamente los clientes que no han
+8. Devuelve el nombre de los clientes a los que no se les ha entregado a
+   tiempo un pedido.
+
+9. Devuelve un listado de las diferentes gamas de producto que ha comprado
+   cada cliente.
+
+   ## Consultas multitabla (Composición externa)
+
+   **Resuelva todas las consultas utilizando las cláusulas LEFT JOIN, RIGHT JOIN, NATURAL**
+   **LEFT JOIN y NATURAL RIGHT JOIN.**
+
+10. Devuelve un listado que muestre solamente los clientes que no han
     realizado ningún pago.
 
-29. Devuelve un listado que muestre solamente los clientes que no han
+11. Devuelve un listado que muestre solamente los clientes que no han
     realizado ningún pedido.
 
-30. Devuelve un listado que muestre los clientes que no han realizado ningún
+12. Devuelve un listado que muestre los clientes que no han realizado ningún
     pago y los que no han realizado ningún pedido.
 
-31. Devuelve un listado que muestre solamente los empleados que no tienen
+13. Devuelve un listado que muestre solamente los empleados que no tienen
     una oficina asociada.
 
-32. Devuelve un listado que muestre solamente los empleados que no tienen un
+14. Devuelve un listado que muestre solamente los empleados que no tienen un
     cliente asociado.
 
-33. Devuelve un listado que muestre solamente los empleados que no tienen un
+15. Devuelve un listado que muestre solamente los empleados que no tienen un
     cliente asociado junto con los datos de la oficina donde trabajan.
 
-34. Devuelve un listado que muestre los empleados que no tienen una oficina
+16. Devuelve un listado que muestre los empleados que no tienen una oficina
     asociada y los que no tienen un cliente asociado.
 
-35. Devuelve un listado de los productos que nunca han aparecido en un
+17. Devuelve un listado de los productos que nunca han aparecido en un
     pedido.
 
-36. Devuelve un listado de los productos que nunca han aparecido en un
+18. Devuelve un listado de los productos que nunca han aparecido en un
     pedido. El resultado debe mostrar el nombre, la descripción y la imagen del
     producto.
 
-37. Devuelve las oficinas donde no trabajan ninguno de los empleados que
+19. Devuelve las oficinas donde no trabajan ninguno de los empleados que
     hayan sido los representantes de ventas de algún cliente que haya realizado
     la compra de algún producto de la gama Frutales.
 
-38. Devuelve un listado con los clientes que han realizado algún pedido pero no
+20. Devuelve un listado con los clientes que han realizado algún pedido pero no
     han realizado ningún pago.
 
-39. Devuelve un listado con los datos de los empleados que no tienen clientes
+21. Devuelve un listado con los datos de los empleados que no tienen clientes
     asociados y el nombre de su jefe asociado.
 
     ## Consultas resumen
 
-40. ¿Cuántos empleados hay en la compañía?
+22. ¿Cuántos empleados hay en la compañía?
 
-41. ¿Cuántos clientes tiene cada país?
+23. ¿Cuántos clientes tiene cada país?
 
-42. ¿Cuál fue el pago medio en 2009?
+24. ¿Cuál fue el pago medio en 2009?
 
-43. ¿Cuántos pedidos hay en cada estado? Ordena el resultado de forma
+25. ¿Cuántos pedidos hay en cada estado? Ordena el resultado de forma
     descendente por el número de pedidos.
 
-44. Calcula el precio de venta del producto más caro y más barato en una
+26. Calcula el precio de venta del producto más caro y más barato en una
     misma consulta.
 
-45. Calcula el número de clientes que tiene la empresa.
+27. Calcula el número de clientes que tiene la empresa.
 
-46. ¿Cuántos clientes existen con domicilio en la ciudad de Madrid?
+28. ¿Cuántos clientes existen con domicilio en la ciudad de Madrid?
 
-47. ¿Calcula cuántos clientes tiene cada una de las ciudades que empiezan
+29. ¿Calcula cuántos clientes tiene cada una de las ciudades que empiezan
     por M?
 
-48. Devuelve el nombre de los representantes de ventas y el número de clientes
+30. Devuelve el nombre de los representantes de ventas y el número de clientes
     al que atiende cada uno.
 
-49. Calcula el número de clientes que no tiene asignado representante de
+31. Calcula el número de clientes que no tiene asignado representante de
     ventas.
 
-50. Calcula la fecha del primer y último pago realizado por cada uno de los
+32. Calcula la fecha del primer y último pago realizado por cada uno de los
     clientes. El listado deberá mostrar el nombre y los apellidos de cada cliente.
 
-51. Calcula el número de productos diferentes que hay en cada uno de los
+33. Calcula el número de productos diferentes que hay en cada uno de los
     pedidos.
 
-52. Calcula la suma de la cantidad total de todos los productos que aparecen en
+34. Calcula la suma de la cantidad total de todos los productos que aparecen en
     cada uno de los pedidos.
 
-53. Devuelve un listado de los 20 productos más vendidos y el número total de
+35. Devuelve un listado de los 20 productos más vendidos y el número total de
     unidades que se han vendido de cada uno. El listado deberá estar ordenado
     por el número total de unidades vendidas.
 
-54. La facturación que ha tenido la empresa en toda la historia, indicando la
+36. La facturación que ha tenido la empresa en toda la historia, indicando la
     base imponible, el IVA y el total facturado. La base imponible se calcula
     sumando el coste del producto por el número de unidades vendidas de la
     tabla detalle_pedido. El IVA es el 21 % de la base imponible, y el total la
     suma de los dos campos anteriores.
 
-55. La misma información que en la pregunta anterior, pero agrupada por
+37. La misma información que en la pregunta anterior, pero agrupada por
     código de producto.
 
-56. La misma información que en la pregunta anterior, pero agrupada por
+38. La misma información que en la pregunta anterior, pero agrupada por
     código de producto filtrada por los códigos que empiecen por OR.
 
-57. Lista las ventas totales de los productos que hayan facturado más de 3000
+39. Lista las ventas totales de los productos que hayan facturado más de 3000
     euros. Se mostrará el nombre, unidades vendidas, total facturado y total
     facturado con impuestos (21% IVA).
 
-58. Muestre la suma total de todos los pagos que se realizaron para cada uno
+40. Muestre la suma total de todos los pagos que se realizaron para cada uno
     de los años que aparecen en la tabla pagos.
 
     ## Subconsultas
 
     ## Con operadores básicos de comparación
 
-59. Devuelve el nombre del cliente con mayor límite de crédito.
+41. Devuelve el nombre del cliente con mayor límite de crédito.
 
-60. Devuelve el nombre del producto que tenga el precio de venta más caro.
+42. Devuelve el nombre del producto que tenga el precio de venta más caro.
 
-61. Devuelve el nombre del producto del que se han vendido más unidades.
+43. Devuelve el nombre del producto del que se han vendido más unidades.
     (Tenga en cuenta que tendrá que calcular cuál es el número total de
     unidades que se han vendido de cada producto a partir de los datos de la
     tabla detalle_pedido)
 
-62. Los clientes cuyo límite de crédito sea mayor que los pagos que haya
+44. Los clientes cuyo límite de crédito sea mayor que los pagos que haya
     realizado. (Sin utilizar INNER JOIN).
 
-63. Devuelve el producto que más unidades tiene en stock.
+45. Devuelve el producto que más unidades tiene en stock.
 
-64. Devuelve el producto que menos unidades tiene en stock.
+46. Devuelve el producto que menos unidades tiene en stock.
 
-65. Devuelve el nombre, los apellidos y el email de los empleados que están a
+47. Devuelve el nombre, los apellidos y el email de los empleados que están a
     cargo de Alberto Soria.
 
     ## Subconsultas con ALL y ANY
 
-66. Devuelve el nombre del cliente con mayor límite de crédito.
+48. Devuelve el nombre del cliente con mayor límite de crédito.
 
-67. Devuelve el nombre del producto que tenga el precio de venta más caro.
+49. Devuelve el nombre del producto que tenga el precio de venta más caro.
 
-68. Devuelve el producto que menos unidades tiene en stock.
+50. Devuelve el producto que menos unidades tiene en stock.
 
     ## Subconsultas con IN y NOT IN
 
-69. Devuelve el nombre, apellido1 y cargo de los empleados que no
+51. Devuelve el nombre, apellido1 y cargo de los empleados que no
     representen a ningún cliente.
 
-70. Devuelve un listado que muestre solamente los clientes que no han
+52. Devuelve un listado que muestre solamente los clientes que no han
     realizado ningún pago.
 
-71. Devuelve un listado que muestre solamente los clientes que sí han realizado
+53. Devuelve un listado que muestre solamente los clientes que sí han realizado
     algún pago.
 
-72. Devuelve un listado de los productos que nunca han aparecido en un
+54. Devuelve un listado de los productos que nunca han aparecido en un
     pedido.
 
-73. Devuelve el nombre, apellidos, puesto y teléfono de la oficina de aquellos
+55. Devuelve el nombre, apellidos, puesto y teléfono de la oficina de aquellos
     empleados que no sean representante de ventas de ningún cliente.
 
-74. Devuelve las oficinas donde no trabajan ninguno de los empleados que
+56. Devuelve las oficinas donde no trabajan ninguno de los empleados que
     hayan sido los representantes de ventas de algún cliente que haya realizado
     la compra de algún producto de la gama Frutales.
 
-75. Devuelve un listado con los clientes que han realizado algún pedido pero no
+57. Devuelve un listado con los clientes que han realizado algún pedido pero no
     han realizado ningún pago.
     18.
 
