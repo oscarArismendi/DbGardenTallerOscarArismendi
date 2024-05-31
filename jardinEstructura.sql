@@ -128,8 +128,8 @@ CREATE TABLE pago (
 	cliente_id INT(7),
 	forma_pago_id INT(7),
 	tipo_pago_id INT(7),
-	fecha_pago DATE NOT NULL,
-	total DECIMAL (15,2) NOT NULL,
+	fecha_pago DATE ,
+	total DECIMAL (15,2),
 	CONSTRAINT PK_Transaccion_Id PRIMARY KEY(id),
 	CONSTRAINT FK_Cliente_Pago_Id FOREIGN KEY (cliente_id) REFERENCES cliente(id),
 	CONSTRAINT FK_FormaPago_Pago_Id FOREIGN KEY (forma_pago_id) REFERENCES forma_pago(id),
@@ -161,7 +161,7 @@ CREATE TABLE direccion_cliente (
 );
 
 CREATE TABLE producto (
-	id INT(7) AUTO_INCREMENT,
+	id VARCHAR(15),
 	nombre VARCHAR(50) NOT NULL,
 	gama_id INT(7),
 	dimensiones VARCHAR(25) NULL,
@@ -202,7 +202,7 @@ CREATE TABLE direccion_proveedor (
 );
 
 CREATE TABLE precio (
-	producto_id INT(7),
+	producto_id VARCHAR(15),
 	precio_venta DECIMAL(15, 2) NOT NULL,
 	proveedor_id INT(7),
 	precio_proveedor DECIMAL(15, 2) NOT NULL,
@@ -227,8 +227,8 @@ CREATE TABLE pedido (
 );
 
 CREATE TABLE detalle_pedido (
-	producto_id INT(7),
 	pedido_id INT(7),
+	producto_id VARCHAR(15),
 	cantidad INT(10) NOT NULL,
 	numero_linea SMALLINT(6) NOT NULL,
 	CONSTRAINT PK_DetallePedido_Id PRIMARY KEY(producto_id, pedido_id),
