@@ -216,15 +216,13 @@ CREATE TABLE pedido (
 	id INT(7) AUTO_INCREMENT,
 	fecha_pedido DATE NOT NULL,
 	fecha_esperada DATE NOT NULL,
-	fecha_entrega DATE NOT NULL,
+	fecha_entrega DATE,
 	estado_pedido_id INT(7),
 	cliente_id INT(7),
-	pago_id INT(7),
 	comentarios TEXT NULL,
 	CONSTRAINT PK_Pedido_Id PRIMARY KEY(id),
 	CONSTRAINT FK_EstadoPedido_Pedido_Id FOREIGN KEY (estado_pedido_id) REFERENCES estado_pedido(id),
-	CONSTRAINT FK_Cliente_Pedido_Id FOREIGN KEY (cliente_id) REFERENCES cliente(id),
-	CONSTRAINT FK_Pago_Pedido_Id FOREIGN KEY (pago_id) REFERENCES pago(id)
+	CONSTRAINT FK_Cliente_Pedido_Id FOREIGN KEY (cliente_id) REFERENCES cliente(id)
 );
 
 CREATE TABLE detalle_pedido (
